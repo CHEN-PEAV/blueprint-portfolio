@@ -9,6 +9,10 @@ export default {
   ],
   theme: {
   	extend: {
+        fontFamily: {
+            sans: ["var(--font-geist-sans)", "sans-serif"], // Use CSS variable from next/font
+            mono: ["var(--font-geist-mono)", "monospace"], // Use CSS variable from next/font
+        },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

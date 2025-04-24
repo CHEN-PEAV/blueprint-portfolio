@@ -9,15 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 neon-glow-primary", // Added glow
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 neon-glow-accent", // Consider accent for destructive glow
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground neon-glow-accent", // Use accent for glow on hover
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 neon-glow-primary", // Added primary glow
+        ghost: "hover:bg-accent hover:text-accent-foreground neon-glow-accent", // Use accent for glow on hover
+        link: "text-primary underline-offset-4 hover:underline hover:text-primary/80", // Subtle hover change
       },
       size: {
         default: "h-10 px-4 py-2",
