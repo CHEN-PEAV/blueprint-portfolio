@@ -10,8 +10,8 @@ export default {
   theme: {
   	extend: {
         fontFamily: {
-            sans: ["var(--font-geist-sans)", "sans-serif"], // Use CSS variable from next/font
-            mono: ["var(--font-geist-mono)", "monospace"], // Use CSS variable from next/font
+            sans: ["var(--font-inter)", "sans-serif"], // Use CSS variable for Inter
+            // Mono font is removed as it's not explicitly used, simplifying setup
         },
   		colors: {
   			background: 'hsl(var(--background))',
@@ -90,7 +90,8 @@ export default {
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+            spin: 'spin 1s linear infinite', // Ensure spin animation is defined
   		}
   	}
   },

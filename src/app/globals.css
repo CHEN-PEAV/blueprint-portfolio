@@ -98,7 +98,7 @@
     @apply dark;
   }
   body {
-    @apply bg-background text-foreground font-sans; /* Use Geist Sans from layout */
+    @apply bg-background text-foreground font-sans; /* Use font-sans from tailwind config */
     /* Blueprint Grid Background */
     background-image:
       linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),

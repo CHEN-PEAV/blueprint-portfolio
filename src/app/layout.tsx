@@ -1,21 +1,15 @@
 import type { Metadata } from 'next';
-import { GeistSans as GeistSansFont, GeistMono as GeistMonoFont } from 'next/font/google';
+import { Inter } from 'next/font/google'; // Changed from GeistSans/GeistMono
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster";
 import Footer from '@/components/Footer';
 
-// Instantiate the fonts
-const geistSans = GeistSansFont({
+// Instantiate the font
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-geist-sans', // CSS variable name
+  variable: '--font-inter', // CSS variable name
 });
-
-const geistMono = GeistMonoFont({
-  subsets: ['latin'],
-  variable: '--font-geist-mono', // CSS variable name
-});
-
 
 export const metadata: Metadata = {
   title: 'Pondara - Web Developer Portfolio',
@@ -32,8 +26,7 @@ export default function RootLayout({
       <body
         className={cn(
           'min-h-screen font-sans antialiased flex flex-col',
-          geistSans.variable, // Apply the sans font variable
-          geistMono.variable  // Apply the mono font variable
+          inter.variable // Apply the Inter font variable
         )}
       >
         <div className="flex-grow">
