@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google'; // Changed from GeistSans/GeistMono
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster";
@@ -22,8 +22,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark h-full" suppressHydrationWarning={true}>
+    <html lang="en" className="dark h-full">
       <body
+        suppressHydrationWarning={true} // Moved here from <html>
         className={cn(
           'min-h-screen font-sans antialiased flex flex-col',
           inter.variable // Apply the Inter font variable
