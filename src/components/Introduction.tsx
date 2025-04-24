@@ -6,7 +6,7 @@ export default function Introduction() {
     <section id="introduction" className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
       <div className="flex-1 text-center md:text-left">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary via-cyan-300 to-foreground">
-          Hi, I’m Pondara
+          Hi, I’m PUNDARA
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground mb-6">
           A Web Developer crafting digital experiences.

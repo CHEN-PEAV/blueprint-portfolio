@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Pondara - Web Developer Portfolio',
-  description: 'Portfolio of Pondara, a creative Web Developer specializing in modern web technologies.',
+  title: 'PUNDARA - Web Developer Portfolio',
+  description: 'Portfolio of PUNDARA, a creative Web Developer specializing in modern web technologies.',
 };
 
 export default function RootLayout({
@@ -22,9 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark h-full">
+    <html lang="en" className="dark h-full" suppressHydrationWarning={true}>
       <body
-        suppressHydrationWarning={true} // Moved here from <html>
         className={cn(
           'min-h-screen font-sans antialiased flex flex-col',
           inter.variable // Apply the Inter font variable
