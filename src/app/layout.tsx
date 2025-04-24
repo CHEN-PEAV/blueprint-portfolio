@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'PUNDARA - Web Developer Portfolio',
-  description: 'Portfolio of PUNDARA, a creative Web Developer specializing in modern web technologies.',
+  title: 'PONDARA - Web Developer Portfolio',
+  description: 'Portfolio of PONDARA, a creative Web Developer specializing in modern web technologies.',
 };
 
 export default function RootLayout({
@@ -23,11 +23,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark h-full" suppressHydrationWarning={true}>
+      {/* Adding suppressHydrationWarning here as well, although the one on <html> should ideally cover it */}
       <body
         className={cn(
           'min-h-screen font-sans antialiased flex flex-col',
           inter.variable // Apply the Inter font variable
         )}
+        suppressHydrationWarning={true}
       >
         <div className="flex-grow">
           {children}
