@@ -1,6 +1,7 @@
 import Introduction from '@/components/Introduction';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
+import ExperienceTimeline from '@/components/ExperienceTimeline'; // Import the new component
 import ContactForm from '@/components/ContactForm';
 import { Separator } from '@/components/ui/separator';
 
@@ -12,6 +13,8 @@ export default function Home() {
       <Projects />
       <Separator className="bg-primary/30" />
       <Skills />
+      <Separator className="bg-primary/30" />
+      <ExperienceTimeline /> {/* Add the ExperienceTimeline component */}
       <Separator className="bg-primary/30" />
       <ContactForm />
     </div>
