@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -105,26 +106,27 @@ export default function ExperienceTimeline() {
         <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12">
           {experienceData.map((entry, index) => {
             const isOdd = index % 2 !== 0; // Determine if item is on the left or right (for desktop)
-            const year = parseInt(entry.duration.match(/(\d{4})/)?.[0] || '0', 10); // Extract year
-            const isDown = year <= 2021; // Example: Place 2021 and earlier downwards
-            const is2022Up = year >= 2022; // Example: Place 2022 and later upwards
+            const yearMatch = entry.duration.match(/(\d{4})/);
+            const year = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear(); // Extract year or default to current year
+            const isDown = year <= 2021; // Place 2021 and earlier downwards
+            const isUp = year >= 2022; // Place 2022 and later upwards
 
             return (
               <React.Fragment key={index}>
                 {/* Timeline Item Content (Left/Right) */}
                 <div className={cn(
-                  "md:text-right fade-in-on-scroll",
+                  "md:text-right fade-in-on-scroll", // Apply base fade-in class
                   isOdd ? 'md:col-start-1' : 'md:col-start-3',
-                  isVisible && 'is-visible' // Add is-visible class when scrolled into view
+                  isVisible && 'is-visible' // Add is-visible class when section is visible
                 )}
-                 style={{ transitionDelay: `${index * 150}ms` }} // Stagger animation
+                 style={{ transitionDelay: `${index * 150}ms` }} // Stagger animation delay
                  >
                   <Card className={cn(
-                    "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md",
+                    "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto md:mx-0", // Ensure centering on mobile, auto on desktop
                     isOdd ? 'md:ml-auto' : 'md:mr-auto',
                     // Positioning based on year for desktop
-                    isDown && !isOdd && 'md:mt-12',
-                    is2022Up && isOdd && 'md:mb-12'
+                    isDown && !isOdd && 'md:mt-12', // 2021 down, right side
+                    isUp && isOdd && 'md:mb-12'     // 2022 up, left side
 
                   )}>
                     <CardHeader>
