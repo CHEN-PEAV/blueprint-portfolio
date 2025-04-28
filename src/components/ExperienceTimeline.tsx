@@ -116,13 +116,13 @@ export default function ExperienceTimeline() {
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-primary/30 transform -translate-x-1/2 hidden md:block"></div>
 
         {/* Grid for Timeline Items */}
-        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12 items-stretch"> {/* Use items-stretch */}
+        {/* Changed items-stretch to items-start */}
+        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12 items-start">
           {experienceData.map((entry, index) => {
             const isOdd = index % 2 !== 0; // Determine if item is on the left or right (for desktop)
             const yearMatch = entry.duration.match(/(\d{4})/);
             const year = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear(); // Extract year or default
-            const isDown = year <= 2021; // Place 2021 and earlier downwards
-            const isUp = year >= 2022;   // Place 2022 and later upwards
+            const isCurrentOrRecent = year >= 2022; // Place 2022 and later upwards/current level
 
             return (
               <React.Fragment key={index}>
@@ -133,11 +133,11 @@ export default function ExperienceTimeline() {
                     "md:text-right fade-in-on-scroll", // Base class for fade-in
                     isOdd ? 'md:col-start-1' : 'md:col-start-3',
                     visibleItems[index] && 'is-visible', // Visibility class
-                     // Vertical positioning logic
-                    isDown && !isOdd && 'md:mt-12', // 2021 down, right side (col 3)
-                    isUp && isOdd && 'md:mb-12'     // 2022 up, left side (col 1)
+                     // Vertical positioning logic based on year/index
+                    !isCurrentOrRecent && (isOdd ? 'md:mt-12' : 'md:mt-12'), // Push older items down
+                    isCurrentOrRecent && index > 0 && (isOdd ? 'md:mb-12' : 'md:mb-12') // Push recent items up (except the very first one)
                   )}
-                  style={{ transitionDelay: `${index * 150}ms` }} // Stagger animation delay
+                  style={{ animationDelay: `${index * 150}ms`, transitionDelay: `${index * 150}ms` }} // Stagger animation delay
                 >
                   <Card className={cn(
                     "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto", // Centering on mobile, max-width
@@ -161,7 +161,8 @@ export default function ExperienceTimeline() {
                 </div>
 
                 {/* Center Dot and Connector for Desktop */}
-                 <div className="hidden md:flex md:col-start-2 self-center items-center justify-center"> {/* Use self-center for vertical alignment */}
+                {/* Use self-center to vertically align the dot within its grid cell */}
+                 <div className="hidden md:flex md:col-start-2 self-center items-center justify-center h-full">
                    <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
                  </div>
               </React.Fragment>
