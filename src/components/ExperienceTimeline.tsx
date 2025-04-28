@@ -115,14 +115,10 @@ export default function ExperienceTimeline() {
         {/* Line */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-primary/30 transform -translate-x-1/2 hidden md:block"></div>
 
-        {/* Grid for Timeline Items */}
-        {/* Changed items-stretch to items-start */}
-        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12 items-start">
+        {/* Grid for Timeline Items - Changed items-start to items-center */}
+        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12 items-center">
           {experienceData.map((entry, index) => {
             const isOdd = index % 2 !== 0; // Determine if item is on the left or right (for desktop)
-            const yearMatch = entry.duration.match(/(\d{4})/);
-            const year = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear(); // Extract year or default
-            const isCurrentOrRecent = year >= 2022; // Place 2022 and later upwards/current level
 
             return (
               <React.Fragment key={index}>
@@ -133,15 +129,13 @@ export default function ExperienceTimeline() {
                     "md:text-right fade-in-on-scroll", // Base class for fade-in
                     isOdd ? 'md:col-start-1' : 'md:col-start-3',
                     visibleItems[index] && 'is-visible', // Visibility class
-                     // Vertical positioning logic based on year/index
-                    !isCurrentOrRecent && (isOdd ? 'md:mt-12' : 'md:mt-12'), // Push older items down
-                    isCurrentOrRecent && index > 0 && (isOdd ? 'md:mb-12' : 'md:mb-12') // Push recent items up (except the very first one)
+                    // Removed margin-based positioning logic
                   )}
                   style={{ animationDelay: `${index * 150}ms`, transitionDelay: `${index * 150}ms` }} // Stagger animation delay
                 >
                   <Card className={cn(
                     "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto", // Centering on mobile, max-width
-                    isOdd ? 'md:ml-auto' : 'md:mr-auto' // Align left/right on desktop
+                    isOdd ? 'md:ml-auto md:text-right' : 'md:mr-auto md:text-left' // Align left/right and text on desktop
                   )}>
                     <CardHeader>
                       <CardTitle className="text-xl text-foreground">{entry.title}</CardTitle>
@@ -160,8 +154,7 @@ export default function ExperienceTimeline() {
                   </Card>
                 </div>
 
-                {/* Center Dot and Connector for Desktop */}
-                {/* Use self-center to vertically align the dot within its grid cell */}
+                {/* Center Dot and Connector for Desktop - Kept self-center */}
                  <div className="hidden md:flex md:col-start-2 self-center items-center justify-center h-full">
                    <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
                  </div>
