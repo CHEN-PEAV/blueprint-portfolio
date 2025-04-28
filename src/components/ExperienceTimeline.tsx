@@ -64,34 +64,46 @@ const experienceData: ExperienceEntry[] = [
 
 export default function ExperienceTimeline() {
   const sectionRef = React.useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = React.useState(false);
+  const itemRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const [visibleItems, setVisibleItems] = React.useState<boolean[]>(
+    Array(experienceData.length).fill(false)
+  );
 
   React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Update state when element comes into view
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          // No need to observe anymore once visible
-          observer.unobserve(entry.target);
-        }
-      },
-      {
-        root: null, // viewport
-        rootMargin: '0px',
-        threshold: 0.1, // trigger when 10% of the element is visible
+    const observers: IntersectionObserver[] = [];
+
+    itemRefs.current.forEach((item, index) => {
+      if (item) {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              setVisibleItems((prev) => {
+                const newVisible = [...prev];
+                newVisible[index] = true;
+                return newVisible;
+              });
+              observer.unobserve(item); // Stop observing once visible
+            }
+          },
+          {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1, // Trigger when 10% is visible
+          }
+        );
+        observer.observe(item);
+        observers.push(observer);
       }
-    );
+    });
 
-    const currentRef = sectionRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
+    // Cleanup observers on component unmount
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      observers.forEach((observer, index) => {
+        const item = itemRefs.current[index];
+        if (item) {
+          observer.unobserve(item);
+        }
+      });
     };
   }, []); // Empty dependency array ensures this runs only once on mount
 
@@ -114,13 +126,15 @@ export default function ExperienceTimeline() {
             return (
               <React.Fragment key={index}>
                 {/* Timeline Item Content (Left/Right) */}
-                <div className={cn(
-                  "md:text-right fade-in-on-scroll", // Apply base fade-in class
-                  isOdd ? 'md:col-start-1' : 'md:col-start-3',
-                  isVisible && 'is-visible' // Add is-visible class when section is visible
-                )}
-                 style={{ transitionDelay: `${index * 150}ms` }} // Stagger animation delay
-                 >
+                <div
+                  ref={el => itemRefs.current[index] = el}
+                  className={cn(
+                    "md:text-right fade-in-on-scroll", // Apply base fade-in class
+                    isOdd ? 'md:col-start-1' : 'md:col-start-3',
+                    visibleItems[index] && 'is-visible' // Add is-visible class when section is visible
+                  )}
+                  style={{ transitionDelay: `${index * 150}ms` }} // Stagger animation delay
+                >
                   <Card className={cn(
                     "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto md:mx-0", // Ensure centering on mobile, auto on desktop
                     isOdd ? 'md:ml-auto' : 'md:mr-auto',
@@ -147,9 +161,11 @@ export default function ExperienceTimeline() {
                 </div>
 
                 {/* Center Dot and Line for Desktop */}
-                <div className="hidden md:flex md:col-start-2 items-center justify-center relative">
+                 {/* Apply self-center to align the dot container vertically within its grid cell */}
+                 {/* The items-center inside centers the dot within the container */}
+                 <div className="hidden md:flex md:col-start-2 self-center items-center justify-center relative">
                    <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
-                </div>
+                 </div>
               </React.Fragment>
             );
           })}
