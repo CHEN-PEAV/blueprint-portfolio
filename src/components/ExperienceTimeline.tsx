@@ -86,9 +86,9 @@ export default function ExperienceTimeline() {
             }
           },
           {
-            root: null,
+            root: null, // Use viewport as root
             rootMargin: '0px',
-            threshold: 0.1, // Trigger when 10% is visible
+            threshold: 0.1, // Trigger when 10% of the element is visible
           }
         );
         observer.observe(item);
@@ -110,18 +110,19 @@ export default function ExperienceTimeline() {
   return (
     <section id="experience" className="space-y-8" ref={sectionRef}>
       <h2 className="text-3xl md:text-4xl font-bold text-center tracking-tight text-primary">Experience Timeline</h2>
-      {/* Vertical Line */}
+      {/* Vertical Line Container */}
       <div className="relative pt-4">
         {/* Line */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-primary/30 transform -translate-x-1/2 hidden md:block"></div>
 
-        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12">
+        {/* Grid for Timeline Items */}
+        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12 items-stretch"> {/* Use items-stretch */}
           {experienceData.map((entry, index) => {
             const isOdd = index % 2 !== 0; // Determine if item is on the left or right (for desktop)
             const yearMatch = entry.duration.match(/(\d{4})/);
-            const year = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear(); // Extract year or default to current year
+            const year = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear(); // Extract year or default
             const isDown = year <= 2021; // Place 2021 and earlier downwards
-            const isUp = year >= 2022; // Place 2022 and later upwards
+            const isUp = year >= 2022;   // Place 2022 and later upwards
 
             return (
               <React.Fragment key={index}>
@@ -129,19 +130,18 @@ export default function ExperienceTimeline() {
                 <div
                   ref={el => itemRefs.current[index] = el}
                   className={cn(
-                    "md:text-right fade-in-on-scroll", // Apply base fade-in class
+                    "md:text-right fade-in-on-scroll", // Base class for fade-in
                     isOdd ? 'md:col-start-1' : 'md:col-start-3',
-                    visibleItems[index] && 'is-visible' // Add is-visible class when section is visible
+                    visibleItems[index] && 'is-visible', // Visibility class
+                     // Vertical positioning logic
+                    isDown && !isOdd && 'md:mt-12', // 2021 down, right side (col 3)
+                    isUp && isOdd && 'md:mb-12'     // 2022 up, left side (col 1)
                   )}
                   style={{ transitionDelay: `${index * 150}ms` }} // Stagger animation delay
                 >
                   <Card className={cn(
-                    "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto md:mx-0", // Ensure centering on mobile, auto on desktop
-                    isOdd ? 'md:ml-auto' : 'md:mr-auto',
-                    // Positioning based on year for desktop
-                    isDown && !isOdd && 'md:mt-12', // 2021 down, right side
-                    isUp && isOdd && 'md:mb-12'     // 2022 up, left side
-
+                    "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto", // Centering on mobile, max-width
+                    isOdd ? 'md:ml-auto' : 'md:mr-auto' // Align left/right on desktop
                   )}>
                     <CardHeader>
                       <CardTitle className="text-xl text-foreground">{entry.title}</CardTitle>
@@ -160,10 +160,8 @@ export default function ExperienceTimeline() {
                   </Card>
                 </div>
 
-                {/* Center Dot and Line for Desktop */}
-                 {/* Apply self-center to align the dot container vertically within its grid cell */}
-                 {/* The items-center inside centers the dot within the container */}
-                 <div className="hidden md:flex md:col-start-2 self-center items-center justify-center relative">
+                {/* Center Dot and Connector for Desktop */}
+                 <div className="hidden md:flex md:col-start-2 self-center items-center justify-center"> {/* Use self-center for vertical alignment */}
                    <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
                  </div>
               </React.Fragment>
