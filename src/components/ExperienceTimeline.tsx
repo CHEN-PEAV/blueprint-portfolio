@@ -17,47 +17,47 @@ interface ExperienceEntry {
 const experienceData: ExperienceEntry[] = [
   {
     company: "Freelance",
-    title: "Full-stack Developer",
-    duration: "Mar 2024 - Present · 5 mos",
+    title: "Full-Stack Developer",
+    duration: "March 2024 - Present",
     location: "Remote",
     description: [
-      "Developing and maintaining web applications for various clients.",
-      "Utilizing modern frameworks like React, Next.js, and Node.js.",
-      "Focusing on creating responsive, user-friendly interfaces and robust backend systems."
+      "Design, develop, and maintain full-stack web applications for diverse clients, utilizing modern frameworks like React, Next.js, and Node.js.",
+      "Manage end-to-end project lifecycles, from consultation and requirements gathering to deployment and ongoing support.",
+      "Specialize in creating responsive, user-friendly interfaces and robust, scalable backend systems to deliver high-quality digital solutions."
     ],
   },
   {
     company: "Sokal",
     title: "Software Engineer",
-    duration: "Oct 2022 - Mar 2024 · 1 yr 6 mos",
-    location: "Raleigh-Durham, North Carolina Area · Hybrid",
+    duration: "October 2022 - March 2024",
+    location: "Raleigh-Durham, NC (Hybrid)",
     description: [
-      "Played a pivotal role in developing and managing over 100 dealer websites using Sokal's proprietary CMS.",
-      "Collaborated closely with designers and project managers to translate requirements into functional web features.",
-      "Specialized in integrating third-party APIs, enhancing website functionality and user experience.",
-      "Provided technical support and troubleshooting for website issues, ensuring optimal performance and client satisfaction."
+      "Led the development and management of 100+ dealer websites using a proprietary CMS, enhancing functionality and user engagement.",
+      "Collaborated in an Agile environment with designers and project managers to translate client requirements into functional web features.",
+      "Engineered and integrated third-party APIs, improving website capabilities and data-driven user experiences.",
+      "Provided expert technical support and troubleshooting, ensuring optimal website performance and client satisfaction."
     ],
   },
-    {
+  {
     company: "Sokal",
     title: "Software Engineer Intern",
-    duration: "May 2022 - Aug 2022 · 4 mos",
-    location: "Raleigh-Durham, North Carolina Area · On-site",
+    duration: "May 2022 - August 2022",
+    location: "Raleigh-Durham, NC (On-site)",
     description: [
-      "Contributed to the development and maintenance of dealer websites within the company's CMS.",
-      "Gained hands-on experience with web development technologies and agile methodologies.",
-      "Assisted senior engineers in debugging and implementing new features."
+      "Contributed to the development and maintenance of dealer websites using the company's content management system.",
+      "Gained hands-on experience with core web technologies (HTML, CSS, JavaScript, PHP) and Agile development practices.",
+      "Assisted senior engineers with debugging, feature implementation, and quality assurance testing."
     ],
   },
   {
     company: "Dev_Able",
     title: "Web Developer Intern",
-    duration: "May 2021 - Aug 2021 · 4 mos",
-    location: "Greensboro, North Carolina · Remote",
+    duration: "May 2021 - August 2021",
+    location: "Greensboro, NC (Remote)",
     description: [
-      "Assisted in the development and testing of web applications.",
-      "Worked with HTML, CSS, JavaScript, and PHP to build and modify web pages.",
-      "Participated in team meetings and contributed to project planning."
+      "Supported the development team in building and testing web applications for small business clients.",
+      "Utilized HTML, CSS, JavaScript, and PHP to create and modify web pages based on project specifications.",
+      "Actively participated in team meetings, contributing to project planning and collaborative problem-solving."
     ],
   },
 ];
@@ -110,15 +110,11 @@ export default function ExperienceTimeline() {
   return (
     <section id="experience" className="space-y-8" ref={sectionRef}>
       <h2 className="text-3xl md:text-4xl font-bold text-center tracking-tight text-primary">Experience Timeline</h2>
-      {/* Vertical Line Container */}
       <div className="relative pt-4">
-        {/* Line */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-primary/30 transform -translate-x-1/2 hidden md:block"></div>
-
-        {/* Grid for Timeline Items - Changed items-start to items-center */}
-        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-12 items-center">
+        <div className="space-y-12 md:space-y-0 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:gap-y-16 items-stretch">
           {experienceData.map((entry, index) => {
-            const isOdd = index % 2 !== 0; // Determine if item is on the left or right (for desktop)
+            const isOdd = index % 2 !== 0;
 
             return (
               <React.Fragment key={index}>
@@ -126,16 +122,15 @@ export default function ExperienceTimeline() {
                 <div
                   ref={el => itemRefs.current[index] = el}
                   className={cn(
-                    "md:text-right fade-in-on-scroll", // Base class for fade-in
-                    isOdd ? 'md:col-start-1' : 'md:col-start-3',
-                    visibleItems[index] && 'is-visible', // Visibility class
-                    // Removed margin-based positioning logic
+                    "md:col-start-auto fade-in-on-scroll flex",
+                    isOdd ? 'md:col-start-1 md:justify-end' : 'md:col-start-3 md:justify-start',
+                    visibleItems[index] && 'is-visible',
                   )}
-                  style={{ animationDelay: `${index * 150}ms`, transitionDelay: `${index * 150}ms` }} // Stagger animation delay
+                  style={{ animationDelay: `${index * 200}ms`, transitionDelay: `${index * 200}ms` }}
                 >
                   <Card className={cn(
-                    "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md mx-auto", // Centering on mobile, max-width
-                    isOdd ? 'md:ml-auto md:text-right' : 'md:mr-auto md:text-left' // Align left/right and text on desktop
+                    "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full max-w-md",
+                     isOdd ? 'md:text-right' : 'md:text-left'
                   )}>
                     <CardHeader>
                       <CardTitle className="text-xl text-foreground">{entry.title}</CardTitle>
@@ -145,17 +140,20 @@ export default function ExperienceTimeline() {
                       <p className="text-sm text-muted-foreground">{entry.duration}</p>
                     </CardHeader>
                     <CardContent>
-                      <ul className="list-disc list-inside space-y-1 text-foreground/80 text-sm text-left">
+                      <ul className={cn(
+                        "list-disc list-inside space-y-1 text-foreground/80 text-sm",
+                        isOdd ? "md:text-right md:list-none md:pl-0" : "text-left" // Adjust list style for right-aligned cards
+                      )}>
                         {entry.description.map((point, i) => (
-                          <li key={i}>{point}</li>
+                          <li key={i} className={cn(isOdd && "md:text-right")}>{point}</li>
                         ))}
                       </ul>
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Center Dot and Connector for Desktop - Kept self-center */}
-                 <div className="hidden md:flex md:col-start-2 self-center items-center justify-center h-full">
+                {/* Center Dot and Connector for Desktop */}
+                 <div className="hidden md:flex md:col-start-2 row-start-auto items-center justify-center h-full relative">
                    <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
                  </div>
               </React.Fragment>
