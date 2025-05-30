@@ -5,44 +5,75 @@ import * as React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { format, differenceInMonths, differenceInYears } from 'date-fns';
 
 interface ExperienceEntry {
-  company: string;
   title: string;
-  duration: string;
-  description: string[];
+  company: string;
   location?: string;
+  startDate: string; // Format: "Month YYYY" e.g., "Feb 2024"
+  endDate: string;   // Format: "Month YYYY" or "Present"
+  description: string[];
 }
 
 const experienceData: ExperienceEntry[] = [
   {
+    title: "Software Project Lead X Social Media Marketer",
+    company: "REAM-tn5",
+    location: "Phnom Penh, Cambodia (On-site)",
+    startDate: "Feb 2025",
+    endDate: "Present",
+    description: [
+      "Led and built software applications, managing development teams, defining project scope, setting timelines, overseeing coding and testing, ensuring quality, with skills in project management, technical proficiency, software architecture, programming languages, team leadership, problem-solving, communication, and risk management.",
+      "Established a consistent online presence, built an engaged community, enhanced brand visibility through social media, including content creation (targeted content, professional videos), running ad campaigns, influencer collaborations, and analyzing data to optimize strategies, with skills in content strategy, copywriting, graphic design (or directing), video production, social media platform expertise, analytics, community management, advertising, and public relations."
+    ]
+  },
+  {
+    title: "Game Developer",
+    company: "Adiussoft Co., Ltd.",
+    location: "Phnom Penh, Cambodia (On-site)",
+    startDate: "Nov 2024",
+    endDate: "Feb 2025",
+    description: [
+      "Core Game Developer & Game Backend Developer using Golang, Nakama, Colyseus, Unity.",
+      "Skills: Go (Programming Language), TypeScript, Unity, Nakama, Colyseus.",
+      "Tools and Technologies: Golang, Nakama, Colyseus, Unity."
+    ]
+  },
+  {
     title: "Back End Developer",
     company: "Sabay Digital",
     location: "Phnom Penh, Cambodia (On-site)",
-    duration: "Feb 2024 - Present",
+    startDate: "Feb 2024",
+    endDate: "Nov 2024",
     description: [
-      "Worked with technologies including NestJS, Nuxt.js, and PHP Frameworks."
+      "Developed a comprehensive Video & Audio Streaming Service (Sabayone API) with Strapi 5, Node.js, Kaltura, HLS, FFmpeg, Nginx, Docker, RSS & Apple Pay integration.",
+      "Worked on: Sabayone API, Video and Audio streaming service, RSS Feed, Apple Pay.",
+      "Tools and Technologies: Strapi 5, Nodejs, Nginx, Kaltura, FFmpeg, HLS (HTTP Live Streaming), Docker."
     ]
   },
   {
     title: "Full-stack Developer",
     company: "Pointer Property",
     location: "Phnom Penh, Cambodia (On-site)",
-    duration: "Oct 2023 - Feb 2024",
+    startDate: "Oct 2023",
+    endDate: "Feb 2024",
     description: []
   },
   {
     title: "Product Manager",
     company: "YouAdMe",
     location: "Phnom Penh, Cambodia",
-    duration: "Jul 2022 - Oct 2023",
+    startDate: "Jul 2022",
+    endDate: "Oct 2023",
     description: []
   },
   {
     title: "Product Developer x Product Researcher",
     company: "Sabay Digital Corporation",
     location: "Phnom Penh, Cambodia",
-    duration: "Dec 2021 - Jul 2022",
+    startDate: "Dec 2021",
+    endDate: "Jul 2022",
     description: [
       "Conducted technology research for products.",
       "Performed data analytics.",
@@ -59,7 +90,8 @@ const experienceData: ExperienceEntry[] = [
     title: "Full Stack Developer",
     company: "Sabay Digital Corporation",
     location: "Cambodia",
-    duration: "Aug 2021 - Dec 2021",
+    startDate: "Aug 2021",
+    endDate: "Dec 2021",
     description: [
       "Developed both frontend and backend components.",
       "Conducted unit testing.",
@@ -74,7 +106,8 @@ const experienceData: ExperienceEntry[] = [
     title: "Blockchain x Backend Developer",
     company: "Sabay Digital Corporation",
     location: "Cambodia",
-    duration: "Mar 2020 - Jul 2021",
+    startDate: "Mar 2020",
+    endDate: "Jul 2021",
     description: [
       "Developed a new payment gateway with payment provider (SSN).",
       "Refactored old projects.",
@@ -91,10 +124,37 @@ const experienceData: ExperienceEntry[] = [
     title: "Back-end Developer",
     company: "OPICTS",
     location: "Phnom Penh, Cambodia",
-    duration: "Aug 2019 - Dec 2019",
+    startDate: "Aug 2019",
+    endDate: "Dec 2019",
     description: []
   }
 ];
+
+function formatDuration(startDateStr: string, endDateStr: string): string {
+  const start = new Date(startDateStr);
+  const end = endDateStr.toLowerCase() === "present" ? new Date() : new Date(endDateStr);
+
+  const monthsTotal = differenceInMonths(end, start) + 1; // Add 1 to make it inclusive
+  const years = Math.floor(monthsTotal / 12);
+  const months = monthsTotal % 12;
+
+  let durationString = "";
+  if (years > 0) {
+    durationString += `${years} yr${years > 1 ? "s" : ""}`;
+  }
+  if (months > 0) {
+    if (years > 0) durationString += " ";
+    durationString += `${months} mo${months > 1 ? "s" : ""}`;
+  }
+  if (!durationString) { // Handle cases like same month start/end
+    durationString = "1 mo";
+  }
+
+  const startFormatted = format(start, "MMM yyyy");
+  const endFormatted = endDateStr.toLowerCase() === "present" ? "Present" : format(end, "MMM yyyy");
+
+  return `${startFormatted} - ${endFormatted} · ${durationString}`;
+}
 
 
 export default function ExperienceTimeline() {
@@ -117,13 +177,13 @@ export default function ExperienceTimeline() {
                 newVisible[index] = true;
                 return newVisible;
               });
-              observer.unobserve(item); // Stop observing once visible
+              observer.unobserve(item);
             }
           },
           {
-            root: null, // Use viewport as root
+            root: null,
             rootMargin: '0px',
-            threshold: 0.1, // Trigger when 10% of the element is visible
+            threshold: 0.1,
           }
         );
         observer.observe(item);
@@ -131,7 +191,6 @@ export default function ExperienceTimeline() {
       }
     });
 
-    // Cleanup observers on component unmount
     return () => {
       observers.forEach((observer, index) => {
         const item = itemRefs.current[index];
@@ -140,7 +199,7 @@ export default function ExperienceTimeline() {
         }
       });
     };
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   return (
     <section id="experience" className="space-y-8" ref={sectionRef}>
@@ -148,34 +207,33 @@ export default function ExperienceTimeline() {
       <div className="relative pt-4">
         {/* Vertical Line - Desktop */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-primary/30 transform -translate-x-1/2 hidden md:block -z-10"></div>
-         {/* Vertical Line - Mobile (simplified, centered for layout consistency) */}
-         <div className="absolute left-8 top-0 bottom-0 w-px bg-primary/30 md:hidden -z-10"></div>
-
+        {/* Vertical Line - Mobile */}
+        <div className="absolute left-8 top-0 bottom-0 w-px bg-primary/30 md:hidden -z-10"></div>
 
         <div className="space-y-12 md:space-y-0">
           {experienceData.map((entry, index) => {
-            const isOdd = index % 2 !== 0; // Determines if item is on the right (odd) or left (even) for desktop
+            const isOdd = index % 2 !== 0; // Right for odd, Left for even (desktop)
 
             return (
               <div
                 key={index}
                 ref={el => itemRefs.current[index] = el}
                 className={cn(
-                  "md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 items-start relative mb-12 md:mb-8", // Reduced md:mb-0 to md:mb-8 for spacing
+                  "md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-8 items-start relative mb-12 md:mb-8",
                   "fade-in-on-scroll",
-                   visibleItems[index] && "is-visible"
+                  visibleItems[index] && "is-visible"
                 )}
                 style={{ animationDelay: `${index * 200}ms`, transitionDelay: `${index * 150}ms` }}
               >
-                {/* Content Card - Left or Right for Desktop, Full width for Mobile */}
+                {/* Content Card */}
                 <div className={cn(
-                  "flex w-full", // Full width on mobile
-                  "md:col-start-auto md:max-w-md", // Max width on desktop
+                  "flex w-full",
+                  "md:col-start-auto md:max-w-md",
                   isOdd ? 'md:col-start-3 md:justify-start' : 'md:col-start-1 md:justify-end'
                 )}>
                   <Card className={cn(
                     "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full",
-                     "ml-16 md:ml-0", // Margin for mobile to align with the dot
+                    "ml-16 md:ml-0", // Margin for mobile for dot alignment
                     isOdd ? 'md:text-left' : 'md:text-right'
                   )}>
                     <CardHeader>
@@ -183,18 +241,17 @@ export default function ExperienceTimeline() {
                       <CardDescription className="text-secondary-foreground">
                         {entry.company} {entry.location && `· ${entry.location}`}
                       </CardDescription>
-                      <p className="text-sm text-muted-foreground">{entry.duration}</p>
+                      <p className="text-sm text-muted-foreground">{formatDuration(entry.startDate, entry.endDate)}</p>
                     </CardHeader>
                     <CardContent>
-                       <ul className={cn(
+                      <ul className={cn(
                         "list-disc space-y-1 text-foreground/80 text-sm",
-                         "list-inside text-left", // Always list-inside and text-left
-                         isOdd ? "md:ml-0" : "md:ml-0 md:list-none md:text-right" // Keep text-right for even desktop items
+                        "list-inside text-left", // Always list-inside and text-left for bullet points
+                        isOdd ? "md:ml-0" : "md:ml-0 md:list-none md:text-right" // Keep text-right for even desktop items, remove list style
                       )}>
-                        {entry.description.map((point, i) => (
+                        {entry.description.length > 0 ? entry.description.map((point, i) => (
                           <li key={i} className={cn(isOdd ? "md:ml-0" : "md:mr-0")}>{point}</li>
-                        ))}
-                         {entry.description.length === 0 && (
+                        )) : (
                           <li className="text-muted-foreground/70 italic">Details available upon request.</li>
                         )}
                       </ul>
@@ -202,13 +259,17 @@ export default function ExperienceTimeline() {
                   </Card>
                 </div>
 
-                {/* Center Dot for Desktop - Aligned with Card Center */}
-                <div className="hidden md:flex md:col-start-2 row-start-1 items-center justify-center h-full relative">
-                   <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
+                {/* Center Dot - Desktop */}
+                <div className={cn(
+                  "hidden md:flex md:col-start-2 row-start-1 items-center justify-center h-full relative"
+                )}>
+                  <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
                 </div>
 
-                {/* Dot for Mobile - Positioned to the left of the card */}
-                <div className="md:hidden absolute left-8 top-1/2 w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary transform -translate-x-1/2 -translate-y-1/2"></div>
+                {/* Dot - Mobile */}
+                <div className={cn(
+                  "md:hidden absolute left-8 top-1/2 w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary transform -translate-x-1/2 -translate-y-1/2 z-10"
+                )}></div>
               </div>
             );
           })}
@@ -217,3 +278,5 @@ export default function ExperienceTimeline() {
     </section>
   );
 }
+
+    
