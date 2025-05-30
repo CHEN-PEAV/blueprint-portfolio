@@ -5,7 +5,7 @@ import * as React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase } from 'lucide-react';
 import { cn } from "@/lib/utils";
-import { format, differenceInMonths, differenceInYears } from 'date-fns';
+import { format, differenceInMonths } from 'date-fns';
 
 interface ExperienceEntry {
   title: string;
@@ -131,10 +131,10 @@ const experienceData: ExperienceEntry[] = [
 ];
 
 function formatDuration(startDateStr: string, endDateStr: string): string {
-  const start = new Date(startDateStr);
+  const start = new Date(startDateStr); // Assuming "Month YYYY" is parsable by Date
   const end = endDateStr.toLowerCase() === "present" ? new Date() : new Date(endDateStr);
 
-  const monthsTotal = differenceInMonths(end, start) + 1; // Add 1 to make it inclusive
+  const monthsTotal = differenceInMonths(end, start) + 1; // Add 1 to make it inclusive if start and end are same month
   const years = Math.floor(monthsTotal / 12);
   const months = monthsTotal % 12;
 
@@ -146,10 +146,10 @@ function formatDuration(startDateStr: string, endDateStr: string): string {
     if (years > 0) durationString += " ";
     durationString += `${months} mo${months > 1 ? "s" : ""}`;
   }
-  if (!durationString) { // Handle cases like same month start/end
+  if (!durationString) { // Handle cases like same month start/end or very short durations
     durationString = "1 mo";
   }
-
+  
   const startFormatted = format(start, "MMM yyyy");
   const endFormatted = endDateStr.toLowerCase() === "present" ? "Present" : format(end, "MMM yyyy");
 
@@ -183,7 +183,7 @@ export default function ExperienceTimeline() {
           {
             root: null,
             rootMargin: '0px',
-            threshold: 0.1,
+            threshold: 0.1, // Item is 10% visible
           }
         );
         observer.observe(item);
@@ -194,7 +194,7 @@ export default function ExperienceTimeline() {
     return () => {
       observers.forEach((observer, index) => {
         const item = itemRefs.current[index];
-        if (item) {
+        if (item && observer) { // Added null check for observer
           observer.unobserve(item);
         }
       });
@@ -203,7 +203,7 @@ export default function ExperienceTimeline() {
 
   return (
     <section id="experience" className="space-y-8" ref={sectionRef}>
-      <h2 className="text-3xl md:text-4xl font-bold text-center tracking-tight text-primary">Experience Timeline</h2>
+      <h2 className="text-3xl md:text-4xl font-bold text-center tracking-tight text-primary font-space-grotesk">Experience Timeline</h2>
       <div className="relative pt-4">
         {/* Vertical Line - Desktop */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-primary/30 transform -translate-x-1/2 hidden md:block -z-10"></div>
@@ -228,29 +228,29 @@ export default function ExperienceTimeline() {
                 {/* Content Card */}
                 <div className={cn(
                   "flex w-full",
-                  "md:col-start-auto md:max-w-md",
+                  "md:col-start-auto md:max-w-md", // Ensure max-width for cards
                   isOdd ? 'md:col-start-3 md:justify-start' : 'md:col-start-1 md:justify-end'
                 )}>
                   <Card className={cn(
                     "bg-card/80 backdrop-blur-sm border-primary/20 neon-glow-primary w-full",
                     "ml-16 md:ml-0", // Margin for mobile for dot alignment
-                    isOdd ? 'md:text-left' : 'md:text-right'
+                    'text-left' // Universal left alignment for card content
                   )}>
                     <CardHeader>
-                      <CardTitle className="text-xl text-foreground">{entry.title}</CardTitle>
-                      <CardDescription className="text-secondary-foreground">
+                      <CardTitle className="text-xl text-foreground font-space-grotesk">{entry.title}</CardTitle>
+                      <CardDescription className="text-secondary-foreground font-roboto-mono">
                         {entry.company} {entry.location && `· ${entry.location}`}
                       </CardDescription>
-                      <p className="text-sm text-muted-foreground">{formatDuration(entry.startDate, entry.endDate)}</p>
+                      <p className="text-sm text-muted-foreground font-roboto-mono">{formatDuration(entry.startDate, entry.endDate)}</p>
                     </CardHeader>
                     <CardContent>
                       <ul className={cn(
-                        "list-disc space-y-1 text-foreground/80 text-sm",
-                        "list-inside text-left", // Always list-inside and text-left for bullet points
-                        isOdd ? "md:ml-0" : "md:ml-0 md:list-none md:text-right" // Keep text-right for even desktop items, remove list style
+                        "list-disc space-y-1 text-foreground/80 text-sm font-roboto-mono",
+                        "list-inside text-left", // Ensures li content and bullets are left-aligned
+                        "md:ml-0" // Consistent margin for desktop
                       )}>
                         {entry.description.length > 0 ? entry.description.map((point, i) => (
-                          <li key={i} className={cn(isOdd ? "md:ml-0" : "md:mr-0")}>{point}</li>
+                          <li key={i}>{point}</li>
                         )) : (
                           <li className="text-muted-foreground/70 italic">Details available upon request.</li>
                         )}
@@ -263,7 +263,8 @@ export default function ExperienceTimeline() {
                 <div className={cn(
                   "hidden md:flex md:col-start-2 row-start-1 items-center justify-center h-full relative"
                 )}>
-                  <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10"></div>
+                   {/* Ensure dot is vertically centered relative to the card's content height if possible, or stick to top */}
+                  <div className="w-4 h-4 rounded-full bg-primary border-2 border-background neon-glow-primary z-10 mt-[calc(theme(spacing.6)_/_2)]"></div> {/* Adjust mt to visually align with CardHeader start */}
                 </div>
 
                 {/* Dot - Mobile */}
@@ -278,5 +279,3 @@ export default function ExperienceTimeline() {
     </section>
   );
 }
-
-    
